@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "yeastar-sms-bridge"
+version = "0.1.0"
+description = "A django app that provides additional reliability and admin features for SMS on the Yeastar TG series."
+authors = ["Adedayo Ayeni <dedayoa@gmail.com>"]
+license = "UNLICENSED"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^3.2.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
