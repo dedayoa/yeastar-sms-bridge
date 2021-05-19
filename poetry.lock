@@ -65,6 +65,21 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "django-phonenumber-field"
+version = "5.1.0"
+description = "An international phone number field for django models."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Django = ">=2.2"
+
+[package.extras]
+phonenumbers = ["phonenumbers (>=7.0.2)"]
+phonenumberslite = ["phonenumberslite (>=7.0.2)"]
+
+[[package]]
 name = "django-timezone-field"
 version = "4.1.2"
 description = "A Django app providing database and form fields for pytz timezone objects."
@@ -210,7 +225,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "36655ccd9cfdb30d53db2e3cd158d84bccbd73c6e9165bfa9d4e66f772143bb2"
+content-hash = "21a04d4bb9101b512110b77116bea23e511962fd930f9884427915f3aa71ea6e"
 
 [metadata.files]
 asgiref = [
@@ -236,6 +251,10 @@ django = [
 django-environ = [
     {file = "django-environ-0.4.5.tar.gz", hash = "sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde"},
     {file = "django_environ-0.4.5-py2.py3-none-any.whl", hash = "sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4"},
+]
+django-phonenumber-field = [
+    {file = "django-phonenumber-field-5.1.0.tar.gz", hash = "sha256:9eda963ac15b363393f677cc084efd45c3bd97bb5a0cdb4a06409ac99e05dd4b"},
+    {file = "django_phonenumber_field-5.1.0-py3-none-any.whl", hash = "sha256:48724ba235ee8248a474204faa0934c5baf9536f429859d05cb131fbd6b1c695"},
 ]
 django-timezone-field = [
     {file = "django-timezone-field-4.1.2.tar.gz", hash = "sha256:cffac62452d060e365938aa9c9f7b72d70d8b26b9c60243bce227b35abd1b9df"},

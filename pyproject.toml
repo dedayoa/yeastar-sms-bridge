@@ -11,6 +11,7 @@ Django = "^3.2.3"
 django-timezone-field = "^4.1.2"
 psycopg2 = "^2.8.6"
 django-environ = "^0.4.5"
+django-phonenumber-field = "^5.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest-django = "^4.3.0"
