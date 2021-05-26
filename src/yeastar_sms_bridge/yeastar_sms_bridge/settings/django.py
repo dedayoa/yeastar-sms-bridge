@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'gateway.apps.GatewayConfig',
     'sms.apps.SmsConfig',
     'phonenumber_field',
+    "django_rq",
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,15 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         )
     }
+
+CACHES = {
+    'default': env.cache('REDIS_URL')
+}
+
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE' : 'default',
+        },
+    }
+
+RQ_SHOW_ADMIN_LINK = True

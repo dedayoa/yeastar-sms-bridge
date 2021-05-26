@@ -30,7 +30,18 @@ class SMSMessageStateLog(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
 class SMSMessage(models.Model):
+    class Status:
+        NEW = "new"
+        SUCCESS = "success"
+        FAILED = "failed"
+        ERROR = "error"
 
+    STATUS = (
+        (Status.SUCCESS, "Success"),
+        (Status.NEW, "New"),
+        (Status.FAILED, "Failed"),
+        (Status.ERROR, "Error")
+    )
     id = models.UUIDField(primary_key=True, editable=False)
     bulk_id = models.UUIDField(blank=True, null=True)
     text = models.TextField(blank=False)
@@ -38,6 +49,7 @@ class SMSMessage(models.Model):
     pages = models.PositiveIntegerField(default=0, blank=True)  
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=30, default=Status.NEW, choices=STATUS)
     class Meta:
         ordering = ("-created_at",)
         verbose_name = "SMS Message"
@@ -58,6 +70,13 @@ class SMSMessage(models.Model):
             state = state,
             state_reason = state_reason
         )
+        if state == SMSMessageStateLog.State.SUBMITTED_OK:
+            self.status = SMSMessage.Status.SUCCESS
+        if state == SMSMessageStateLog.State.FAILED:
+            self.status = SMSMessage.Status.FAILED
+        if state == SMSMessageStateLog.State.ERROR:
+            self.status = SMSMessage.Status.ERROR
+        self.save()
 
     def get_latest_state_log(self):
         return SMSMessageStateLog.objects.filter(sms_message_id = self.id).first()

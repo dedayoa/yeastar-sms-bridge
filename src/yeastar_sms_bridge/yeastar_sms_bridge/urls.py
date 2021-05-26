@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/sms/', include(('sms.urls4api', 'smsapi'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('django-rq/', include('django_rq.urls'))
 ]
 
 admin.site.site_header = 'YeaSMS Backend Administration'

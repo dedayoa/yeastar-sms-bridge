@@ -86,15 +86,15 @@ class SMSReport(APIView):
         
         result = {}
         #sucessfully sent
-        latest_state = m.get_latest_state_log()
-        if latest_state == SMSMessageStateLog.State.SUBMITTED_OK:
+        latest_state = m.status
+        if latest_state == SMSMessage.Status.SUCCESS:
             result['sent'] = True
             result['to'] = str(m.recipient)
             result['time'] = latest_state.timestamp
-        elif latest_state == SMSMessageStateLog.State.ERROR:
+        elif latest_state == SMSMessage.Status.ERROR:
             result['error'] = True
             result['errorReason'] = latest_state.state_reason           
-        elif latest_state == SMSMessageStateLog.State.FAILED:
+        elif latest_state == SMSMessage.Status.FAILED:
             result['failed'] = True
             
         return Response(result)

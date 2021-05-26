@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from gateway.models import Span
+from gateway.models import SendProfile, Span
 
 from sms.models import SMSMessage, SMSMessageStateLog
 from requests.exceptions import ConnectionError
@@ -54,5 +54,10 @@ def yeastar_sms_send(queued_message):
     finally:
         span_obj.save()
 
-
-    
+#TODO: user has multiple gateway devices
+def get_span_by_profile(user_id):
+    default_profile = SendProfile.objects.get(user__id = user_id, is_default = True)
+    if default_profile.strategy == SendProfile.SendStrategy.SINGLE:
+        return default_profile.spans.all()[0]
+    #TODO: complete implmentation for random and distribute
+    return default_profile.spans.all()[0]
