@@ -1,2 +1,2 @@
-from . import django
-from . import ysb
+from .django import *
+from .ysb import *
