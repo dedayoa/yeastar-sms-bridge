@@ -5,6 +5,7 @@ from .models import SMSMessageStateLog, SMSMessage, InvalidSMSMessage, SMSQueue
 
 class SMSMessageStateLogAdmin(admin.ModelAdmin):
     list_display = ('sms_message_id', 'state', 'state_reason', 'timestamp')
+    search_fields = ('sms_message_id',)
 class SMSQueueAdmin(admin.ModelAdmin):
     list_display = ['message', 'submit_attempts', 'next_submit_attempt_at', 'created']
 
