@@ -1,11 +1,12 @@
-from .models import SMSMessage, SMSQueue, SMSMessageStateLog
-from gateway.helpers import get_span_by_profile
-from gateway.helpers import yeastar_sms_send
+import logging
+from datetime import timedelta
+
 from django.conf import settings
 from django.utils import timezone
-import logging
-from .helpers import next_time
+from gateway.helpers import get_span_by_profile, yeastar_sms_send
 
+from .helpers import next_time
+from .models import SMSMessage, SMSMessageStateLog, SMSQueue
 
 logger = logging.getLogger(__name__)
 
@@ -50,3 +51,7 @@ def process_queued_messages():
         smsq.submit_attempts += 1
         smsq.next_submit_attempt_at = next_time(timezone.now(), smsq.submit_attempts)
         smsq.save()
+
+def prune_message_state_logs():
+    SMSMessageStateLog.objects.filter(timestamp__lte = timezone.now() + timedelta(days=settings.LOG_RETENTION_DAYS)).delete()
+    logger.info("Pruned SMS Message logs")

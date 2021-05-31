@@ -5,7 +5,7 @@ from gateway.tests.factories import (DeviceFactory, SendProfileFactory,
 from pytest_factoryboy import register
 from userapp.tests.factories import UserFactory
 
-from .factories import SMSMessageFactory, SMSQueueFactory
+from .factories import SMSMessageFactory, SMSQueueFactory, SMSMessageStateLogFactory
 
 register(UserFactory)
 register(DeviceFactory)
@@ -17,4 +17,4 @@ def send_profile_1(span, user):
 
 register(SMSMessageFactory)
 register(SMSQueueFactory)
-
+register(SMSMessageStateLogFactory)

@@ -20,3 +20,7 @@ class SMSQueueFactory(factory.django.DjangoModelFactory):
     message = factory.SubFactory(SMSMessageFactory)
     class Meta:
         model = "sms.SMSQueue"
+
+class SMSMessageStateLogFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "sms.SMSMessageStateLog"

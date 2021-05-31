@@ -21,5 +21,11 @@ def run_schedules():
         interval = 0.1*60,
         repeat = None
         )
-
+    
+    default_scheduler.schedule(
+        scheduled_time = datetime.utcnow(),
+        func = 'sms.tasks.prune_message_state_logs',
+        interval = 20*60,
+        repeat = None
+        )
     
