@@ -2,6 +2,8 @@ import factory
 from phonenumber_field.phonenumber import phonenumbers
 from gateway.tests.factories import SpanFactory
 from userapp.tests.factories import UserFactory
+from django.utils import timezone
+from ..helpers import next_time
 
 class SMSMessageFactory(factory.django.DjangoModelFactory):
 
@@ -15,5 +17,6 @@ class SMSMessageFactory(factory.django.DjangoModelFactory):
 
 class SMSQueueFactory(factory.django.DjangoModelFactory):
 
+    message = factory.SubFactory(SMSMessageFactory)
     class Meta:
         model = "sms.SMSQueue"

@@ -520,10 +520,18 @@ python-versions = ">=3.5, <4"
 [package.extras]
 brotli = ["brotli"]
 
+[[package]]
+name = "yapf"
+version = "0.31.0"
+description = "A formatter for Python code."
+category = "dev"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "c87a008f7edbd311bb324d47854fb629139d888e4a57db0435e77f7f89fc2846"
+content-hash = "340d4cf1c10e4a0f44535c3203bd29047d252a888d891b82b6bea75ba8748d1a"
 
 [metadata.files]
 asgiref = [
@@ -743,4 +751,8 @@ urllib3 = [
 whitenoise = [
     {file = "whitenoise-5.2.0-py2.py3-none-any.whl", hash = "sha256:05d00198c777028d72d8b0bbd234db605ef6d60e9410125124002518a48e515d"},
     {file = "whitenoise-5.2.0.tar.gz", hash = "sha256:05ce0be39ad85740a78750c86a93485c40f08ad8c62a6006de0233765996e5c7"},
+]
+yapf = [
+    {file = "yapf-0.31.0-py2.py3-none-any.whl", hash = "sha256:e3a234ba8455fe201eaa649cdac872d590089a18b661e39bbac7020978dd9c2e"},
+    {file = "yapf-0.31.0.tar.gz", hash = "sha256:408fb9a2b254c302f49db83c59f9aa0b4b0fd0ec25be3a5c51181327922ff63d"},
 ]

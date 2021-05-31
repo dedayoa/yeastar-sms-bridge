@@ -52,7 +52,7 @@ class VTigerPluginAPI(APIView):
                     bulk_id = bulk_id,
                     text = data.get("message"),
                     recipient = recipient,
-                    user = request.user,
+                    owner = request.user,
                     pages = counter["messages"]
                     )
                 

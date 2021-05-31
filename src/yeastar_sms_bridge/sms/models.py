@@ -10,14 +10,12 @@ class SMSMessageStateLog(models.Model):
     class State:
         PROCESSING = "processing"
         SUBMITTED_OK = "submitted"
-        QUEUED = "queued"
         DELAYED = "delayed"
         FAILED = "failed"
         ERROR = "error"
 
     STATE = (
         (State.SUBMITTED_OK, "Submitted OK"),
-        (State.QUEUED, "Queued"),
         (State.DELAYED, "Delayed"),
         (State.FAILED, "Failed"),
         (State.PROCESSING, "Processing"),
@@ -25,9 +23,12 @@ class SMSMessageStateLog(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     sms_message_id = models.UUIDField(blank=False, null=False, db_index=True)
-    state = models.CharField(max_length=30, default=State.QUEUED, choices=STATE)
+    state = models.CharField(max_length=30, default=State.PROCESSING, choices=STATE)
     state_reason = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-timestamp', 'sms_message_id')
 
 class SMSMessage(models.Model):
     class Status:
@@ -35,12 +36,14 @@ class SMSMessage(models.Model):
         SUCCESS = "success"
         FAILED = "failed"
         ERROR = "error"
+        QUEUED = "queued"
 
     STATUS = (
         (Status.SUCCESS, "Success"),
         (Status.NEW, "New"),
         (Status.FAILED, "Failed"),
-        (Status.ERROR, "Error")
+        (Status.ERROR, "Error"),
+        (Status.QUEUED, "Queued"),
     )
     id = models.UUIDField(primary_key=True, editable=False)
     bulk_id = models.UUIDField(blank=True, null=True)
@@ -48,6 +51,7 @@ class SMSMessage(models.Model):
     recipient = PhoneNumberField()
     pages = models.PositiveIntegerField(default=0, blank=True)  
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    send_span = models.ForeignKey('gateway.Span', on_delete=models.PROTECT, related_name="span_sms_messages", null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=30, default=Status.NEW, choices=STATUS)
     class Meta:
@@ -100,7 +104,6 @@ class SMSQueue(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     message = models.OneToOneField(SMSMessage, on_delete=models.CASCADE)
     submit_attempts = models.PositiveIntegerField(default=0)
-    send_span = models.ForeignKey('gateway.Span', on_delete=models.PROTECT, related_name="span_sms_messages")
     next_submit_attempt_at = models.DateTimeField(help_text="next time send_sms will be attempted", null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     class Meta:

@@ -28,6 +28,7 @@ pytest-django = "^4.3.0"
 pytest-mock = "^3.6.1"
 pytest-factoryboy = "^2.1.0"
 django-debug-toolbar = "^3.2.1"
+yapf = "^0.31.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
