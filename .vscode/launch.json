@@ -8,7 +8,7 @@
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/yeastar_sms_bridge/manage.py",
+            "program": "${workspaceFolder}/manage.py",
             "args": [
                 "runserver",
                 "0.0.0.0:8001",
