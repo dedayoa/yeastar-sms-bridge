@@ -2,11 +2,6 @@
     "python.analysis.extraPaths": [
         "src/yeastar_sms_bridge"
     ],
-    "python.testing.pytestArgs": [
-        "src/yeastar_sms_bridge/gateway/tests",
-        "src/yeastar_sms_bridge/sms/tests",
-        "src/yeastar_sms_bridge/userapp/tests"
-    ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true,
