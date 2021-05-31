@@ -40,6 +40,9 @@ class Span(models.Model):
     total_messages_sent = models.PositiveIntegerField(default=0)
     total_messages_sent_today = models.PositiveIntegerField(default=0)
     total_messages_sent_month = models.PositiveIntegerField(default=0)
+
+    total_messages_sent_today_last_reset = models.DateTimeField(null=True, blank=True)
+    total_messages_sent_month_last_reset = models.DateTimeField(null=True, blank=True)
     
     last_modified = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
