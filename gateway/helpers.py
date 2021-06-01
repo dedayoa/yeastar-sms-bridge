@@ -10,7 +10,7 @@ def parse_response_from_gateway(response):
     try:
         lines = response.strip().split('\n')
         result = (lines[0].split(":")[1]).strip().lower()
-        if result not in ["failed", "success"]:
+        if result not in ["failed", "success", "error"]:
             return None
         return result
     except IndexError:
@@ -43,8 +43,12 @@ def yeastar_sms_send(queued_message):
                 span.total_messages_sent_month += message.pages
                 if span.message_failure_count > 0:
                     span.message_failure_count = 0
+                queued_message.delete()
             elif rf_gw == "failed":
                 message.add_state_log(SMSMessageStateLog.State.FAILED, state_reason = f"Failed Response from gateway:  {r.text.strip()}")
+                span.message_failure_count += 1
+            elif rf_gw == "error":
+                message.add_state_log(SMSMessageStateLog.State.FAILED, state_reason = f"Error Response from gateway:  {r.text.strip()}")
                 span.message_failure_count += 1
             else:
                 message.add_state_log(SMSMessageStateLog.State.ERROR, state_reason = f"Unknown status from gateway: {r.text.strip()}")
@@ -57,6 +61,9 @@ def yeastar_sms_send(queued_message):
         span.message_failure_count += 1
     except TimeoutError as e:
         message.add_state_log(SMSMessageStateLog.State.ERROR, state_reason = f"Timeout Error occured {e}")
+        span.message_failure_count += 1
+    except Exception as e:
+        message.add_state_log(SMSMessageStateLog.State.ERROR, state_reason = f"Some Error occured {e}")
         span.message_failure_count += 1
     finally:
         span.save()
