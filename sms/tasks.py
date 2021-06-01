@@ -53,5 +53,5 @@ def process_queued_messages():
         smsq.save()
 
 def prune_message_state_logs():
-    SMSMessageStateLog.objects.filter(timestamp__lte = timezone.now() + timedelta(days=settings.LOG_RETENTION_DAYS)).delete()
+    SMSMessageStateLog.objects.filter(timestamp__lte = timezone.now() - timedelta(days=settings.LOG_RETENTION_DAYS)).delete()
     logger.info("Pruned SMS Message logs")
