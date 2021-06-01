@@ -38,7 +38,7 @@ def process_queued_messages():
         smsq.message.add_state_log(SMSMessageStateLog.State.FAILED, "Maximum submit tries attempted")
         smsq.delete()
 
-    sms_messages = SMSQueue.objects.filter(next_submit_attempt_at__lte = timezone.now())[0:max_sms_to_get]
+    sms_messages = SMSQueue.objects.filter(next_submit_attempt_at__lte = timezone.now()).exclude(message__status = SMSMessage.Status.QUEUED)[0:max_sms_to_get]
 
     for smsq in sms_messages:
         
