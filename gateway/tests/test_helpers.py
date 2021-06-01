@@ -46,8 +46,11 @@ Response: Success
 Message: Commit successfully!
         """, "success"),
         ("ajdfjn", None),
-        ("", None)
-
+        ("", None),
+        ("""
+Response: Error
+Message: The port(3) is not active!
+        """, "error")
     ]
 )
 def test_parse_response_from_gateway(response, result):
