@@ -32,6 +32,7 @@ class SMSMessageStateLog(models.Model):
 
 class SMSMessage(models.Model):
     class Status:
+        PROCESSING = "processing"
         NEW = "new"
         SUCCESS = "success"
         FAILED = "failed"
@@ -44,6 +45,7 @@ class SMSMessage(models.Model):
         (Status.FAILED, "Failed"),
         (Status.ERROR, "Error"),
         (Status.QUEUED, "Queued"),
+        (Status.PROCESSING, "Processing"),
     )
     id = models.UUIDField(primary_key=True, editable=False)
     bulk_id = models.UUIDField(blank=True, null=True)
@@ -80,6 +82,8 @@ class SMSMessage(models.Model):
             self.status = SMSMessage.Status.FAILED
         if state == SMSMessageStateLog.State.ERROR:
             self.status = SMSMessage.Status.ERROR
+        if state == SMSMessageStateLog.State.PROCESSING:
+            self.status = SMSMessage.Status.PROCESSING
         self.save()
 
     def get_latest_state_log(self):
