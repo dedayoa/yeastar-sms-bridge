@@ -76,11 +76,24 @@ def test_process_queued_messages_new_message(mocker, sms_queue_factory, sms_mess
     mock_yeastar_send_sms.assert_called()
 
 
+@pytest.mark.parametrize(
+    "days, result", [
+        (0, True),
+        (1, True),
+        (2, False),
+        (5, False)
+    ]
+)
 @pytest.mark.django_db
-def test_prune_message_state_logs(mocker, sms_message_state_log_factory):
+def test_prune_message_state_logs(mocker, sms_message_state_log_factory, settings, days, result):
+    settings.LOG_RETENTION_DAYS = 2
     dt_time = datetime(2020, 10, 10, 10, 11, 0, 0, tzinfo=UTC)
     mock_timezone_now = mocker.patch('sms.tasks.timezone.now')
     mock_timezone_now.return_value = dt_time
-    sms_message_state_log = sms_message_state_log_factory(sms_message_id = uuid.uuid4(), timestamp = dt_time + timedelta(days=3))
+    
+    sms_message_state_log = sms_message_state_log_factory(sms_message_id = uuid.uuid4())
+    
+    # ticking time
+    mock_timezone_now.return_value = dt_time + timedelta(days=days)
     prune_message_state_logs()
-    assert not SMSMessageStateLog.objects.filter(id = sms_message_state_log.id).exists()
+    assert SMSMessageStateLog.objects.filter(id = sms_message_state_log.id).exists() == result
