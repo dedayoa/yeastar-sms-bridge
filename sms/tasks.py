@@ -14,13 +14,13 @@ def queue_messages():
     now = timezone.now()
     new_messages = SMSMessage.objects.filter(status = SMSMessage.Status.NEW)
     for message in new_messages:
+        message.send_span = get_span_by_profile(user_id=message.owner.id)
+        message.status = SMSMessage.Status.QUEUED
+        message.save()
         SMSQueue.objects.create(
             message = message,
             next_submit_attempt_at = next_time(now, 0)
         )
-        message.send_span = get_span_by_profile(user_id=message.owner.id)
-        message.status = SMSMessage.Status.QUEUED
-        message.save()
 
 def process_queued_messages():
     max_sms_to_get = settings.MAX_SMS_BATCH_REQUEST
@@ -38,7 +38,7 @@ def process_queued_messages():
         smsq.message.add_state_log(SMSMessageStateLog.State.FAILED, "Maximum submit tries attempted")
         smsq.delete()
 
-    sms_messages = SMSQueue.objects.filter(next_submit_attempt_at__lte = timezone.now()).exclude(message__status = SMSMessage.Status.QUEUED)[0:max_sms_to_get]
+    sms_messages = SMSQueue.objects.filter(next_submit_attempt_at__lte = timezone.now()).exclude(message__status = SMSMessage.Status.PROCESSING)[0:max_sms_to_get]
 
     for smsq in sms_messages:
         
