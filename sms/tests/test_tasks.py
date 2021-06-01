@@ -41,8 +41,25 @@ def test_process_queued_messages_success_message_is_deleted(mocker, sms_message_
     process_queued_messages()
     assert not SMSQueue.objects.filter(message = sms_message).exists()
 
+
 @pytest.mark.django_db
-def test_process_queued_messages(mocker, sms_queue_factory, sms_message):
+def test_process_queued_messages_queued_message(mocker, sms_queue_factory, sms_message_factory):
+    dt_time = datetime(2020, 10, 10, 10, 11, 0, 0, tzinfo=UTC)
+    dt_time_next = datetime(2020, 10, 10, 10, 11, 14, tzinfo=UTC)
+    sms_message = sms_message_factory(status = SMSMessage.Status.QUEUED)
+    
+    mock_yeastar_send_sms = mocker.patch('sms.tasks.yeastar_sms_send')
+    mock_timezone_now = mocker.patch('sms.tasks.timezone.now')
+    mock_timezone_now.return_value = dt_time
+    mock_next_time = mocker.patch('sms.tasks.next_time')
+    mock_next_time.return_value = dt_time_next
+
+    sms_queue_factory(next_submit_attempt_at = datetime(2020, 10, 10, 10, 10, 0, 0, tzinfo=UTC), message = sms_message)
+    process_queued_messages()
+    assert not SMSQueue.objects.filter(message = sms_message, submit_attempts = 1, next_submit_attempt_at = dt_time_next).exists()
+
+@pytest.mark.django_db
+def test_process_queued_messages_new_message(mocker, sms_queue_factory, sms_message):
     dt_time = datetime(2020, 10, 10, 10, 11, 0, 0, tzinfo=UTC)
     dt_time_next = datetime(2020, 10, 10, 10, 11, 14, tzinfo=UTC)
     
@@ -54,8 +71,8 @@ def test_process_queued_messages(mocker, sms_queue_factory, sms_message):
 
     sms_queue_factory(next_submit_attempt_at = datetime(2020, 10, 10, 10, 10, 0, 0, tzinfo=UTC), message = sms_message)
     process_queued_messages()
-    mock_yeastar_send_sms.assert_called()
     assert SMSQueue.objects.filter(message = sms_message, submit_attempts = 1, next_submit_attempt_at = dt_time_next).exists()
+    mock_yeastar_send_sms.assert_called()
 
 
 @pytest.mark.django_db
