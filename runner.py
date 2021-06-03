@@ -12,7 +12,7 @@ def kill(proc_pid):
 if __name__ == "__main__":
     
     proc1 = subprocess.Popen('python manage.py rqworker default', shell=True)
-    proc2 = subprocess.Popen('python manage.py rqscheduler --interval 10 -v 3', shell=True)
+    proc2 = subprocess.Popen('python manage.py rqscheduler --interval 10', shell=True)
     
     proc_list = [proc1, proc2]
     
