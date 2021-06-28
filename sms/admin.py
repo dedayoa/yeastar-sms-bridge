@@ -2,6 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import SMSMessageStateLog, SMSMessage, InvalidSMSMessage, SMSQueue
+from import_export import resources
+from import_export.admin import ExportActionModelAdmin
+
+class SMSMessageResource(resources.ModelResource):
+    class Meta:
+        model = SMSMessage
 
 
 def mark_messages_as_new(modeladmin, request, queryset):
@@ -15,11 +21,12 @@ class SMSMessageStateLogAdmin(admin.ModelAdmin):
 class SMSQueueAdmin(admin.ModelAdmin):
     list_display = ['message', 'submit_attempts', 'next_submit_attempt_at', 'created']
 
-class SMSMessageAdmin(admin.ModelAdmin):
+class SMSMessageAdmin(ExportActionModelAdmin):
     list_display = ['id', 'bulk_id', 'text', 'recipient', 'pages', 'send_span', 'status', 'created_at']
     search_fields = ('id', 'recipient')
     list_filter = ('status',)
-    actions = [mark_messages_as_new]
+    actions = ExportActionModelAdmin.actions + [mark_messages_as_new]
+    resource_class = SMSMessageResource
     
     def get_queryset(self, request):
         qs = super(SMSMessageAdmin, self).get_queryset(request)
