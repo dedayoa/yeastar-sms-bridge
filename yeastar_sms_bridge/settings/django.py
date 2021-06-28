@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'sms.apps.SmsConfig',
     'phonenumber_field',
     "django_rq",
+    "import_export",
 ]
 
 MIDDLEWARE = [
